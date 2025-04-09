@@ -35,3 +35,4 @@ pkcs8 = { version="0.10", features = ["pem"] }
 hex = "0.4"
 nix = { version="0.29", features = ["user"] }
 users = "0.11"
+pem = "0.3"
