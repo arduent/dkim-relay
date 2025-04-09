@@ -1,0 +1,9 @@
+
+If you want to adjust things like queue delay (30 seconds) 
+and max queue length (100 messages), failed credential honeypot,
+etc. Then take a look at the comments in the source code.
+
+Contact me with issues/questions/help.
+
+
+

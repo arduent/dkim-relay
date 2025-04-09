@@ -1,0 +1,38 @@
+[server]
+listen_host = "127.0.0.1"
+listen_port = 12050
+drop_user = "dkim"
+tls_enabled = true
+cert_path = "/path/to/fullchain.pem"
+key_path = "/path/to/privkey.pem"
+auth_username = "user"
+auth_password = "password"
+
+[[domain]]
+name = "example.com"
+selector = "selector"
+private_key = """
+-----BEGIN PRIVATE KEY-----
+...
+-----END PRIVATE KEY-----
+"""
+relay = "tls://smtp.example.com"
+relay_port = 587
+helo_host = "this.host.name"
+relay_auth_user = "user"
+relay_auth_password = "password"
+
+[[domain]]
+name = "example2.com"
+selector = "selector"
+private_key = """
+-----BEGIN PRIVATE KEY-----
+...
+-----END PRIVATE KEY-----
+"""
+relay = "tls://smtp.example.com"
+relay_port = 587
+helo_host = "this.host.name"
+relay_auth_user = "user"
+relay_auth_password = "password"
+

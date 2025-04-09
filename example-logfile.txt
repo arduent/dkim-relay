@@ -1,0 +1,55 @@
+# ./target/release/dkim-relay -p /var/run/dkim.pid -c /root/dkim-relay/config.toml -l /var/dkim/dkim.log -d
+# tail -f /var/dkim/dkim.log
+2025-04-08 21:07:18 [INFO] +++ dkim-relay version "0.1a" started with PID 28703
+2025-04-08 21:07:18 [INFO] Using configuration file: /root/dkim-relay/config.toml
+2025-04-08 21:07:18 [INFO] Daemonized successfully
+2025-04-08 21:07:18 [INFO] Loaded Config /root/dkim-relay/config.toml
+2025-04-08 21:07:18 [INFO] Logging to /var/dkim/dkim.log
+2025-04-08 21:07:18 [INFO] Domain 1 : "quantificant.com" selector: "jonofi"
+2025-04-08 21:07:18 [INFO] Domain 2 : "example.com" selector: "example"
+2025-04-08 21:07:18 [INFO] Server is listening on 127.0.0.1:12050
+2025-04-08 21:07:18 [INFO] TLS enabled
+2025-04-08 21:07:18 [INFO] Dropped to user: dkim
+2025-04-08 21:09:35 [INFO] Accepted connection from 127.0.0.1:32855
+2025-04-08 21:09:35 [INFO] Sending greeting to new client
+2025-04-08 21:09:35 [INFO] Received: EHLO quantificant.com
+2025-04-08 21:09:35 [INFO] Responding to EHLO/HELO
+2025-04-08 21:09:35 [INFO] Received: AUTH LOGIN
+2025-04-08 21:09:35 [INFO] Received: MAIL FROM:<waitman@quantificant.com>
+2025-04-08 21:09:35 [INFO] Found Email Address: waitman@quantificant.com
+2025-04-08 21:09:35 [INFO] Received: RCPT TO:<gobble.wa@gmail.com>
+2025-04-08 21:09:35 [INFO] Received: DATA
+2025-04-08 21:09:35 [INFO] Sign Domain: quantificant.com
+2025-04-08 21:09:35 [INFO] Matched selector: jonofi
+2025-04-08 21:09:35 [INFO] Number of headers: 12
+2025-04-08 21:09:35 [INFO] Body Hash: 1IAQgvuZ4Q0JoSZjyBSXQVxxmsiXZ24I/oAQKbFw+6g=
+2025-04-08 21:09:35 [INFO] Headers present: From,Reply-To,Mail-Reply-To,Subject,Date,To,Organization
+2025-04-08 21:09:35 [INFO] Hashed Header: bvb8Fq5szeibwmC9ksxgDAe1mtOY2urCHiBV6AOeylc=
+2025-04-08 21:09:35 [INFO] Email queued successfully.
+2025-04-08 21:09:35 [INFO] Received: QUIT
+2025-04-08 21:10:05 [INFO] Using TLS
+2025-04-08 21:10:05 [INFO] Connecting to relay at smtp-relay.gmail.com:587
+2025-04-08 21:10:06 [INFO] Relay greeting: 220 smtp-relay.gmail.com ESMTP 98e67ed59e1d1-306dd1293ebsm4051a91.7 - gsmtp
+2025-04-08 21:10:06 [INFO] EHLO full response: 250-smtp-relay.gmail.com at your service, [2605:a140:2037:5070::1]
+250-SIZE 157286400
+250-8BITMIME
+250-STARTTLS
+250-ENHANCEDSTATUSCODES
+250-PIPELINING
+250-CHUNKING
+250 SMTPUTF8
+
+2025-04-08 21:10:06 [INFO] STARTTLS response: 220 2.0.0 Ready to start TLS
+
+2025-04-08 21:10:06 [INFO] Queued email - 1094 bytes
+2025-04-08 21:10:07 [INFO] AUTH prompt: 334 VXNlcm5hbWU6
+2025-04-08 21:10:07 [INFO] Username response: 334 UGFzc3dvcmQ6
+2025-04-08 21:10:07 [INFO] AUTH success response: 235 2.7.0 Accepted
+2025-04-08 21:10:07 [INFO] MAIL FROM:<waitman@quantificant.com> response: 250 2.1.0 OK 98e67ed59e1d1-306dd1293ebsm4051a91.7 - gsmtp
+2025-04-08 21:10:07 [INFO] RCPT TO:<gobble.wa@gmail.com> response: 250 2.1.5 OK 98e67ed59e1d1-306dd1293ebsm4051a91.7 - gsmtp
+2025-04-08 21:10:07 [INFO] DATA response: 354 Go ahead 98e67ed59e1d1-306dd1293ebsm4051a91.7 - gsmtp
+2025-04-08 21:10:07 [INFO] Final response: 250 2.0.0 OK  1744146607 98e67ed59e1d1-306dd1293ebsm4051a91.7 - gsmtp
+2025-04-08 21:10:07 [INFO] QUIT response: 221 2.0.0 closing connection 98e67ed59e1d1-306dd1293ebsm4051a91.7 - gsmtp
+2025-04-08 21:10:07 [INFO] Email forwarded successfully.
+
+

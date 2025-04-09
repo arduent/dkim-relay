@@ -1,0 +1,167 @@
+.TH DKIM-RELAY 8 "April 2025" "dkim-relay" "User Commands"
+.SH NAME
+dkim-relay \- SMTP server for DKIM signing and relaying email
+.SH SYNOPSIS
+.B dkim-relay
+[\-p pidfile] [\-c config_file] [\-l log_file] [\-d]
+.SH DESCRIPTION
+The dkim-relay program runs as an SMTP server which creates a
+DKIM-Signature header for incoming email, then relays the email to another
+SMTP server as configured. The user may use the included program
+.B dkim-gen-keys
+to create the RSA private key and a corresponding BIND zone file entry for the
+public key. Keys are RSA up to 2048 bits; however, 1024-bit keys may be more
+practical since many DNS servers can fragment responses that exceed a certain
+size. Such fragmentation may cause issues with some DKIM verifiers.
+.PP
+Configuration is provided in a file (typically
+.I config.toml
+) where you can set parameters such as:
+.RS
+.TP
+.B [server]
+.IP "listen_host"
+The host on which the SMTP server will listen.
+.TP
+.IP "listen_port"
+The TCP port the server will bind to.
+.TP
+.IP "drop_user"
+The unprivileged username to drop privileges to after startup.
+.TP
+.IP "tls_enabled"
+Set to true to enable TLS.
+.TP
+.IP "cert_path"
+Path to the server certificate (PEM format).
+.TP
+.IP "key_path"
+Path to the server private key (PEM format).
+.TP
+.IP "auth_username" and "auth_password"
+SMTP authentication credentials for incoming connections.
+.RE
+.PP
+Also, configure each domain to be signed. For each domain you want DKIM
+signing to be applied, add a configuration block as follows:
+.PP
+.EX
+[[domain]]
+name = "example.com"
+selector = "selector"
+private_key = """
+-----BEGIN PRIVATE KEY-----
+...
+-----END PRIVATE KEY-----
+"""
+relay = "tls://smtp.example.com"
+relay_port = 587
+helo_host = "this.host.name"
+relay_auth_user = "user"
+relay_auth_password = "password"
+.EX
+.PP
+After configuring your domains, ensure that the configuration file is owned by
+root and has restrictive permissions (e.g. chmod 400 or 600) to prevent unintended
+users from reading private keys and credentials.
+.SH STARTING THE SERVER
+The available command-line switches are:
+.IP "\-p pidfile" 4
+Path to a PID file.
+.IP "\-c config_file" 4
+Path to the configuration file.
+.IP "\-l log_file" 4
+Path to the log file.
+.IP "\-d" 4
+Daemonize the process.
+.PP
+For example, you might start the program with:
+.P
+\fB./target/release/dkim-relay \-p /var/run/dkim.pid \\
+    \-c /root/dkim-relay/config.toml \-l /var/dkim/dkim.log \-d\fP
+.SH INSTALLATION
+To build the program, run:
+.P
+\fBcargo build --release\fP
+.PP
+For debugging purposes:
+.P
+\fBcargo build\fP
+.SH HOW IT WORKS
+.IP "1. SMTP CONNECTION & PARSING"
+When a client connects to the server and sends SMTP commands, the email is
+parsed into separate header and body structures. The server does not alter the
+original email content, except by adding a DKIM-Signature header at the top of the
+header block.
+.IP "2. CANONICALIZATION"
+The program uses relaxed/relaxed canonicalization, where:
+.RS
+.TP
+Headers are transformed by:
+- Converting the field name to lowercase.
+- Removing any extra white space around the colon separator.
+- Compressing sequences of whitespace in the header field value into a single SP.
+.TP
+Body is canonicalized by:
+- Removing trailing white space on each line.
+- Removing all trailing empty lines.
+- Joining lines with CRLF, and including exactly one CRLF at the end (if not empty).
+.RE
+.IP "3. HASHING AND SIGNING"
+A 32-byte SHA-256 hash is computed on the canonicalized body.
+.PP
+For the headers:
+.RS
+A temporary DKIM-Signature header is appended to the header block with its
+B bh=
+tag populated with the body hash, but the
+B b=
+tag left blank.
+Then, the canonicalized header data (which includes the DKIM-Signature header with an empty
+B b=
+tag) is hashed.
+.PP
+This hash is combined with a fixed DER prefix for SHA-256 (19 bytes for SHA-256)
+to produce a 51-byte digest, which is then signed using the RSA private key with
+PKCS#1 v1.5 padding. The resulting signature is base64-encoded and inserted into
+the final DKIM-Signature header.
+.IP "4. HEADER LOCKING"
+By optionally including blank headers in the canonicalized header data, the absence
+of a header is “locked in.” This prevents a third party from inserting such headers later,
+which would otherwise not break the signature.
+.IP "5. HEADER PLACEMENT"
+When the DKIM-Signature header is constructed (with the b= field populated),
+it is placed at the top of the header block. If multiple DKIM-Signature headers
+exist, the topmost one is used by verifiers.
+.SH SECURITY CONSIDERATIONS
+.IP "1. PRIVILEGE DROPPING"
+After reading the configuration and opening any privileged sockets (e.g. port 25),
+the daemon will drop privileges to an unprivileged user (as specified in the config).
+.IP "2. STARTTLS FOR INCOMING CONNECTIONS"
+TLS is optional for incoming and outgoing connections. Currently, the server supports 
+STARTTLS on outgoing connections but not (yet) on incoming connections. The incoming 
+connection supports SSL (typically SSL SMTP runs on port 465, but can be configured 
+to your preference).
+.SH SEE ALSO
+opendkim(8), postfix(8)
+.SH AUTHOR
+Waitman Gobble <waitman@quantificant.com>
+.SH LICENSE
+Copyright (C) 2025 Waitman Gobble
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along
+with this program; if not, see <https://www.gnu.org/licenses/>.
+
+Contact by email: <waitman@quantificant.com>
+<https://quantificant.com/contact>
+

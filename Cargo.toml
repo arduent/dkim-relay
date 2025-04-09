@@ -1,0 +1,29 @@
+[package]
+name = "dkim-relay"
+version = "0.0.1"
+authors = ["Waitman Gobble"]
+edition = "2024"
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }
+tokio = { version = "1", features = ["full"] }
+tokio-rustls = "0.26"
+rustls = "0.23"
+rustls-pemfile = "2.2"
+tokio-native-tls = "0.3"
+native-tls = "0.2"
+serde = { version = "1.0", features = ["derive"] }
+toml = "0.5"
+daemonize = "0.5"
+log = "0.4"
+simplelog = "0.12"
+chrono = "0.4"
+time = "0.3"
+rsa = { version="0.9", features = ["sha2"] }
+openssl = "0.10"
+base64 = "0.22" 
+rand = "0.8"
+pkcs8 = { version="0.10", features = ["pem"] }
+hex = "0.4"
+nix = { version="0.29", features = ["user"] }
+users = "0.11"
