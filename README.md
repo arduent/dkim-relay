@@ -101,14 +101,6 @@ cargo build
 - **TLS Support:**  
   TLS is optional for incoming and outgoing connections. Currently, the server supports STARTTLS on outgoing connections but not (yet) on incoming connections. The incoming connection supports SSL (typically SSL SMTP runs on port 465, but can be configured to your preference).
 
-## Future Enhancements
-
-- **Implement STARTTLS for Incoming Connections:**  
-  Add support so that incoming connections can be upgraded to TLS.
-  
-- **Advanced Authentication:**  
-  Optionally add SMTP AUTH for incoming connections if required.
-
 ## How to Use
 
 1. **Configure** your `config.toml` with your server and domain settings.
