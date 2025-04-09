@@ -1,3 +1,11 @@
+[[bin]]
+name = "dkim-relay"
+path = "src/dkim-relay.rs"
+
+[[bin]]
+name = "dkim-key-gen"
+path = "src/dkim-key-gen.rs"
+
 [package]
 name = "dkim-relay"
 version = "0.0.1"
