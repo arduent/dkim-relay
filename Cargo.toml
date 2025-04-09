@@ -3,8 +3,8 @@ name = "dkim-relay"
 path = "src/dkim-relay.rs"
 
 [[bin]]
-name = "dkim-key-gen"
-path = "src/dkim-key-gen.rs"
+name = "dkim-gen-keys"
+path = "src/dkim-gen-keys.rs"
 
 [package]
 name = "dkim-relay"
