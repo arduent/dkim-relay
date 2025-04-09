@@ -1,0 +1,7 @@
+
+$ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+$ . "$HOME/.cargo/env"
+$ git clone https://github.com/arduent/dkim-relay.git
+$ cd dkim-relay
+$ cargo build --release
+
